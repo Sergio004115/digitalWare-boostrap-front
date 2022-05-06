@@ -1,0 +1,86 @@
+<div class="card">
+    <h5 class="card-header text-center bg-primary text-white">Productos</h5>
+    <div class="card-body">
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="getProductos()" *ngIf="divTableProductos">Total en Existencia</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="BuscarInvMinimo()" *ngIf="divTableProductos">Minimo Permitido</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="habFormNuevoProducto()">{{ mensajeBtn }}</button>
+            </div>
+            <div class="col-md-3" *ngIf="divTableProductos">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Escriba un Producto" [(ngModel)]="productoBuscar">
+                    <button class="btn btn-outline-primary" type="button" id="button-addon2" (click)="buscarProd()">Buscar</button>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="divTableProductos">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Código</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Precio Venta</th>
+                            <th scope="col">Existencias</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-Light" *ngFor="let producto of listProductos; let i = index">
+                            <th>{{ i + 1 }}</th>
+                            <td>{{ producto.IdProducto }}</td>
+                            <td>{{ producto.Nombre }}</td>
+                            <td>{{ producto.Precio | number }}</td>
+                            <td>{{ producto.Existencia }}</td>
+                            <td>
+                                <button class="btn btn-outline-primary m-2" (click)="habEditarProducto(producto)">Editar</button>
+                                <button class="btn btn-outline-danger m-2" (click)="eliminarProd(producto)">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="divFormProducto">
+                <div class="card">
+                    <h5 class="card-header text-center bg-ligth text-dark">Nuevo Producto</h5>
+                    <div class="card-body">
+                        <form [formGroup]="productoForm">
+                            <div class="row p-t-20">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="text" id="nombre" class="form-control" placeholder="Nombre Producto" formControlName="nombre">
+                                        <span class="text-danger" *ngIf="camposValidos('nombre')"><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="number" id="precio" class="form-control" placeholder="Precio Producto" formControlName="precio">
+                                        <span class="text-danger" *ngIf="camposValidos('precio')"><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="number" id="existencia" class="form-control" placeholder="Existencia Producto" formControlName="existencia">
+                                        <span class="text-danger" *ngIf="camposValidos('existencia')"><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary w-100" (click)="enviarFormulario()" *ngIf="CrearProd">Crear Producto</button>
+                                        <button class="btn btn-outline-primary w-100" (click)="editarProd()" *ngIf="!CrearProd">Editar Producto</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

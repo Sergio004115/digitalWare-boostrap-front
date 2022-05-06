@@ -1,0 +1,138 @@
+<div class="card">
+    <h5 class="card-header text-center bg-primary text-white">Ventas</h5>
+    <div class="card-body">
+        <div class="row mt-4">
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="generarVentas()">Generar Venta</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="buscarClientesNoMayor()">Compras Clientes Por Edad</button>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="totalComprasPorAnio()">Compras Cliente Por Año</button>
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-outline-primary w-100" (click)="estimacionCompra()">Fecha Estimada Compra</button>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="divFormVenta">
+                <div class="card">
+                    <h5 class="card-header text-center bg-ligth text-dark">Nueva Venta</h5>
+                    <div class="card-body">
+                        <form [formGroup]="ventaForm">
+                            <div class="row p-t-20">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select class="form-control custom-select " data-placeholder="Choose a Category " tabindex="1 " formControlName="cliente">
+                                            <option value="0" [selected]="true" disabled >Seleccione Una Opción...</option>   
+                                            <option value="{{cliente.IdCliente}}" *ngFor="let cliente of listClientes">{{ cliente.Nombres }}</option>                                 
+                                        </select>
+                                        <span class="text-danger " *ngIf="camposValidos('cliente') "><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <select class="form-control custom-select " data-placeholder="Choose a Category " tabindex="1 " formControlName="IdProducto" (change)="seleccionProd($event)">
+                                            <option value="0" [selected]="true" disabled >Seleccione Una Opción...</option>                                      
+                                            <option value="{{producto.IdProducto}}" *ngFor="let producto of listProductos" >{{ producto.Nombre }}</option>                                      
+                                        </select>
+                                        <span class="text-danger" *ngIf="camposValidos('IdProducto')"><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="number" id="cantidad" class="form-control" placeholder="Cantidad" formControlName="CantidadProducto" (keyup)="totalVenta()">
+                                        <span class="text-danger" *ngIf="camposValidos('CantidadProducto')"><b>Campo Obligatorio</b></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <input type="number" id="TotalVenta" class="form-control" placeholder="total Venta" formControlName="TotalVenta" [(ngModel)]="resultadoTotalVenta">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-4">
+                                    <div class="form-group">
+                                        <button class="btn btn-outline-primary w-100" (click)="realizarVenta()">Generar Venta</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="tableNoMayor">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Edad</th>
+                            <th scope="col">Identificacion</th>
+                            <th scope="col">Fecha Compra</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-Light" *ngFor="let clientes of listClientesNoMayor; let i = index">
+                            <th>{{ i + 1 }}</th>
+                            <td>{{ clientes.Nombres }} {{ clientes.Apellidos }} </td>
+                            <td>{{ clientes.Edad }}</td>
+                            <td>{{ clientes.NroIdentificacion }}</td>
+                            <td>{{clientes.FechaVenta | date: 'longDate'}}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="tablePorAnio">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Nombre Producto</th>
+                            <th scope="col">Total Producto Comprados</th>
+                            <th scope="col">total Venta Producto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-Light" *ngFor="let prod of listCompraAnio; let i = index">
+                            <th>{{ i + 1 }}</th>
+                            <td>{{ prod.Nombre }} </td>
+                            <td>{{ prod.TotalProductosComprados }}</td>
+                            <td>{{ prod.TotalVentaProducto | number }}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+            <div class="col-md-12 mt-4" *ngIf="tableEstimacion">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <th scope="col">Número</th>
+                            <th scope="col">Nombre</th>
+                            <th scope="col">Última Compra</th>
+                            <th scope="col">Fecha Estimada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-Light" *ngFor="let prod of listEstimadaCompra; let i = index">
+                            <th>{{ i + 1 }}</th>
+                            <td>{{ prod.Nombres }} </td>
+                            <td>{{ prod.UltimaCompra }}</td>
+                            <td>{{ fechaEstimada | date: 'longDate' }}</td>
+                        </tr>
+                    </tbody>
+
+                </table>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
