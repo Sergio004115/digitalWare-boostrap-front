@@ -13,7 +13,7 @@
             </div>
             <div class="col-md-3" *ngIf="divTableProductos">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Escriba un Producto" [(ngModel)]="productoBuscar">
+                    <input type="text" class="form-control" placeholder="Escriba un Producto" [(ngModel)]="productoBuscar" (keyup.enter)="buscarProd()">
                     <button class="btn btn-outline-primary" type="button" id="button-addon2" (click)="buscarProd()">Buscar</button>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                 <div class="card">
                     <h5 class="card-header text-center bg-ligth text-dark">Nuevo Producto</h5>
                     <div class="card-body">
-                        <form [formGroup]="productoForm">
+                        <form [formGroup]="productoForm" autocomplete="off">
                             <div class="row p-t-20">
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -73,8 +73,8 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <button class="btn btn-outline-primary w-100" (click)="enviarFormulario()" *ngIf="CrearProd">Crear Producto</button>
-                                        <button class="btn btn-outline-primary w-100" (click)="editarProd()" *ngIf="!CrearProd">Editar Producto</button>
+                                        <button class="btn btn-outline-primary w-100" (click)="enviarFormulario()" *ngIf="CrearProd" [disabled]="productoForm.invalid">Crear Producto</button>
+                                        <button class="btn btn-outline-primary w-100" (click)="editarProd()" *ngIf="!CrearProd" [disabled]="productoForm.invalid">Editar Producto</button>
                                     </div>
                                 </div>
                             </div>

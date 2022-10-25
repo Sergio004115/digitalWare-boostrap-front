@@ -26,12 +26,12 @@ export class ProductosService {
 
   getProdMinimoPermitido(minimoPermitido: number){
     const url = `${baseUrl}Productos/getMinimoPermitido?MinimoPermitido=${minimoPermitido}`;
-    return this.http.get(url);
+    return this.http.get<any>(url);
   }
 
   getProductoBusqueda(nombre: string){
     const url = `${baseUrl}Productos/getBusqueda?Nombre=${nombre}`;
-    return this.http.get(url);
+    return this.http.get<any>(url);
   }
 
   insertNewProducto(data: Productos){

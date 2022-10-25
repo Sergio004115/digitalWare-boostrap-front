@@ -7,6 +7,7 @@ import { Productos } from '../../interfaces/productos.interface';
 import Swal from 'sweetalert2';
 import { VentasService } from '../../services/ventas.service';
 import { ComprasClientesNoMayoresEdad } from '../../interfaces/comprasClientesNoMayor.interface';
+import { MensajesService } from '../../services/mensajes.service';
 
 @Component({
   selector: 'app-ventas',
@@ -29,8 +30,10 @@ export class VentasComponent implements OnInit {
   existenciaProducto!: number;
   fechaEstimada: Date = new Date();
   listClientesNoMayor: ComprasClientesNoMayoresEdad[] = [];
+  idClienteSearch: string = '';
 
-  constructor( private fb: FormBuilder, private clientesService: ClientesService, private productosService: ProductosService, private ventasService: VentasService) { }
+  constructor( private fb: FormBuilder, private clientesService: ClientesService, private productosService: ProductosService, private ventasService: VentasService,
+               private mensajesService: MensajesService) { }
 
   ngOnInit(): void {
     this.getClientes();
@@ -123,11 +126,6 @@ generarVentas(){
   this.divFormVenta = true;
 }
 
-// comprasAnio(){
-//   this.tablePorAnio = true;
-//   this.tableNoMayor = false;
-//   this.divFormVenta = false;
-// }
 
 buscarClientesNoMayor(){
   this.ventasService.getclientesNoMayorAños()
@@ -147,6 +145,7 @@ totalComprasPorAnio(){
   this.tablePorAnio = true;
   this.tableNoMayor = false;
   this.divFormVenta = false;
+  this.tableEstimacion = false;
   this.ventasService.getTotalComprasPorAnio()
     .subscribe(resp => {
       this.listCompraAnio = resp;
@@ -155,16 +154,26 @@ totalComprasPorAnio(){
 }
 
 estimacionCompra(){
-  this.tableEstimacion = true;
+  this.tableEstimacion = true;  
   this.tablePorAnio = false;
   this.tableNoMayor = false;
   this.divFormVenta = false;
-  this.ventasService.getFechaEstimadaCompra()
+  
+}
+
+estimarCompraIdCliente(){  
+  this.ventasService.getFechaEstimadaCompra(this.idClienteSearch)
       .subscribe(resp => {
-        this.listEstimadaCompra = resp;          
-        this.estimarCompra(this.listEstimadaCompra);
-        console.log(this.listEstimadaCompra);
-      });
+        if(resp.length === 0){
+          this.mensajesService.mensajeInformativo("No se encuentra venta con este cliente en la base de datos");
+          this.tableEstimacion = false;
+        }else{
+          this.listEstimadaCompra = resp;     
+          this.tableEstimacion = true;     
+          this.estimarCompra(this.listEstimadaCompra);        
+        }
+        
+  });
 }
 
 estimarCompra(listEstimadaCompra: any){

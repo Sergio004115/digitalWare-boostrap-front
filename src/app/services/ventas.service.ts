@@ -30,8 +30,8 @@ export class VentasService {
     return this.http.get<any>(url);
   }
 
-  getFechaEstimadaCompra(){
-    const url = `${baseUrl}Ventas/getEstimacionVentar`;
+  getFechaEstimadaCompra(IdCliente: string){
+    const url = `${baseUrl}Ventas/getEstimacionVentar?IdCliente=${IdCliente}`;
     return this.http.get<any>(url);
   }
 

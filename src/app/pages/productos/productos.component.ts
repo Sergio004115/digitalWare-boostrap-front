@@ -4,6 +4,7 @@ import { ProductosService } from '../../services/productos.service';
 import { Productos } from '../../interfaces/productos.interface';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { MensajesService } from 'src/app/services/mensajes.service';
 
 
 
@@ -24,7 +25,8 @@ export class ProductosComponent implements OnInit {
   CrearProd: boolean = true;
   productoBuscar!: string;
 
-  constructor(private productosService: ProductosService, private fb: FormBuilder) { }
+  constructor(private productosService: ProductosService, private fb: FormBuilder,
+              private mensajesService: MensajesService) { }
 
   ngOnInit(): void {
     this.getProductos();
@@ -48,11 +50,14 @@ export class ProductosComponent implements OnInit {
     return this.productoForm.controls[campo].errors && this.productoForm.controls[campo].touched; 
   }
 
-  BuscarInvMinimo(){    
-    
+  BuscarInvMinimo(){        
     this.productosService.getProdMinimoPermitido(5)
-      .subscribe((resp: any) => {
-        this.listProductos = resp;
+      .subscribe(resp => {
+        if(resp.length === 0){
+          this.mensajesService.mensajeInformativo('Actualmente no hay productos con stock minimo.');      
+        }else{
+          this.listProductos = resp;
+        }
       });
   }
 
@@ -126,6 +131,7 @@ export class ProductosComponent implements OnInit {
               this.getProductos();
               this.divFormProducto = false;
               this.divTableProductos = true;
+              this.idProducto!= null;
               this.productoForm.reset();
             }else{
               Swal.fire("Error", `El producto ${ this.productoForm.value.nombre } no fue editado`, 'error');
@@ -163,8 +169,13 @@ export class ProductosComponent implements OnInit {
 
   buscarProd(){
     this.productosService.getProductoBusqueda(this.productoBuscar)
-      .subscribe((resp: any) => {
-        this.listProductos = resp;
+      .subscribe(resp => {
+        if(resp.length === 0){
+          this.mensajesService.mensajeInformativo("No se encontro ningún producto con ese nombre");          
+        }else{
+          this.listProductos = resp;
+        }
+        this.productoBuscar = "";
       });
   }
 

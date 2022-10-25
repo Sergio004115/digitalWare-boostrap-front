@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="row mt-4">
             <div class="col-md-3">
-                <button class="btn btn-outline-primary w-100" (click)="crearClientes()">Nuevo Cliente</button>
+                <button class="btn btn-outline-primary w-100" (click)="crearClientes()">{{ mensajeBtn }}</button>
             </div>
 
             <div class="col-md-12 mt-4" *ngIf="!cardCrearClientes">
@@ -36,7 +36,7 @@
                 <div class="card">
                     <h5 class="card-header text-center bg-ligth text-dark">Nuevo Cliente</h5>
                     <div class="card-body">
-                        <form [formGroup]="ClienteForm">
+                        <form [formGroup]="ClienteForm" autocomplete="off">
                             <div class="row p-t-20">
                                 <div class="col-md-3">
                                     <div class="form-group">
